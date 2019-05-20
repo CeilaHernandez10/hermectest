@@ -193,20 +193,20 @@ class Picking(models.Model):
         help="It specifies goods to be deliver partially or all at once")
 
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('waiting', 'Waiting Another Operation'),
-        ('confirmed', 'Waiting'),
-        ('assigned', 'Ready'),
+        ('draft', 'Borrador'),
+        ('waiting', 'Esperando Otra Operacion'),
+        ('confirmed', 'En Espera'),
+        ('assigned', 'Listo'),
         ('done', 'Completado'),
-        ('cancel', 'Cancelled'),
+        ('cancel', 'Cancelado'),
     ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
-        help=" * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
-             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
-             " * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
-             " * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
-             " * Completed: has been processed, can't be modified or cancelled anymore.\n"
-             " * Cancelled: has been cancelled, can't be confirmed anymore.")
+        help=" * Borrador: not confirmed yet and will not be scheduled until confirmed.\n"
+             " * Esperando Otra Operacion: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
+             " * En Espera: if it is not ready to be sent because the required products could not be reserved.\n"
+             " * Lito: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
+             " * Completado: has been processed, can't be modified or cancelled anymore.\n"
+             " * Cancelado: has been cancelled, can't be confirmed anymore.")
 
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
@@ -342,16 +342,16 @@ class Picking(models.Model):
     @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
-        - Draft: only used for "planned pickings"
-        - Waiting: if the picking is not ready to be sent so if
+        - Borrador: only used for "planned pickings"
+        - En Espera: if the picking is not ready to be sent so if
           - (a) no quantity could be reserved at all or if
           - (b) some quantities could be reserved and the shipping policy is "deliver all at once"
-        - Waiting another move: if the picking is waiting for another move
-        - Ready: if the picking is ready to be sent so if:
+        - Esperando otro movimiento: if the picking is waiting for another move
+        - Listo: if the picking is ready to be sent so if:
           - (a) all quantities are reserved or if
           - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
-        - Done: if the picking is done.
-        - Cancelled: if the picking is cancelled
+        - Completado: if the picking is done.
+        - Cancelado: if the picking is cancelled
         '''
         if not self.move_lines:
             self.state = 'draft'
