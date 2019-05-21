@@ -194,7 +194,7 @@ class Picking(models.Model):
 
     state = fields.Selection([
         ('draft', 'Borrador'),
-        ('waiting', 'Esperando Otra Operacion'),
+        ('waiting', 'Esperando otra operación'),
         ('confirmed', 'En Espera'),
         ('assigned', 'Listo'),
         ('done', 'Completado'),
@@ -202,7 +202,7 @@ class Picking(models.Model):
     ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
         help=" * Borrador: not confirmed yet and will not be scheduled until confirmed.\n"
-             " * Esperando Otra Operacion: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
+             " * Esperando otra Operación: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
              " * En Espera: if it is not ready to be sent because the required products could not be reserved.\n"
              " * Lito: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
              " * Completado: has been processed, can't be modified or cancelled anymore.\n"
@@ -346,7 +346,7 @@ class Picking(models.Model):
         - En Espera: if the picking is not ready to be sent so if
           - (a) no quantity could be reserved at all or if
           - (b) some quantities could be reserved and the shipping policy is "deliver all at once"
-        - Esperando otro movimiento: if the picking is waiting for another move
+        - Esperando otra Operacion: if the picking is waiting for another move
         - Listo: if the picking is ready to be sent so if:
           - (a) all quantities are reserved or if
           - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
